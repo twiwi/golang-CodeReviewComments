@@ -1,11 +1,11 @@
 # GO语言简单注释规范
 
 
-也可参考 [Effective Go](https://golang.org/doc/effective_go.html "悬停显示"). <br>
+参考 [Effective Go](https://golang.org/doc/effective_go.html ). <br>
 
 ## Gofmt
-  你可以在你的代码中运行 [Gofmt]("https://golang.org/cmd/gofmt/" "悬停显示") 以自动修复大多数代码格式问题。几乎所有的代码都使用 `gofmt`。<br>
-  另一种方法是使用[goimports]("https://godoc.org/golang.org/x/tools/cmd/goimports" "悬停显示")，它是 `gofmt`的超集，可根据需要添加（删除）行。
+  你可以在你的代码中运行 [Gofmt]("https://golang.org/cmd/gofmt/") 以自动修复大多数代码格式问题。几乎所有的代码都使用 `gofmt`。<br>
+  另一种方法是使用[goimports]("https://godoc.org/golang.org/x/tools/cmd/goimports" )，它是 `gofmt`的超集，可根据需要添加（删除）行。
 ## 注释语句
   参考[https://golang.org/doc/effective_go.html#commentary]("https://golang.org/doc/effective_go.html#commentary" "悬停显示")。注释的句子应当具有完整性，即使会多于。但这种方法使得它们在提取到godoc文档时能保持良好的格式。注释应当以描述的事物名称开头，以句点结束。<br>
   参考以下格式<br>
@@ -24,7 +24,7 @@ func Encode(w io.Writer, req *Request) { ...
 context.Context类型的值囊括了跨API和进程边界的安全凭证，跟踪信息，Context应当结束的时间和取消信号。Go程序在整个函数调用链中显式传递上下文，从传入的RPC和HTTP请求到传出请求。
 大多数使用Context的函数应该将context.Context作为其第一个参数:
 
-```
+```go
 func F(ctx context.Context, /* other arguments */) {}
 ```
 从不做特定请求的函数可以使用 context.Background()，但即使您认为不需要，也可以再传递Context时使用错误(err)。如果您有充分的理由认为替代方案是错误的，那么只能直接使用context.Background()
@@ -101,7 +101,7 @@ func Key() string {
 
 ## Don't Panic
 
-参阅 https://golang.org/doc/effective_go.html#errors. 不要使用`panic`作为日常错误处理机制，使用`error`或者多返回值。
+参阅 https://golang.org/doc/effective_go.html#errors. 不要使用`panic`作为日常错误处理机制，请使用`error`或者多返回值。
 
 ## Error Strings
 
@@ -111,20 +111,16 @@ func Key() string {
 
 ## Examples
 
-添加新的包时，请包含预期用法的示例：可运行的例子或者演示完整调用的简单测试
+添加新的包时，请包含预期用法的示例。可以是一个可运行的例子或者演示完整调用的简单测试
 了解更多有关 [可测试示例函数]("https://blog.golang.org/examples")
 
-When adding a new package, include examples of intended usage: a runnable Example,
-or a simple test demonstrating a complete call sequence.
-
-Read more about [testable Example() functions](https://blog.golang.org/examples).
 
 ## Goroutine Lifetimes
 
-When you spawn goroutines, make it clear when - or whether - they exit.
+当你需要使用goruntines时，请确保它们什么时候/什么条件下退出。
 
-Goroutines can leak by blocking on channel sends or receives: the garbage collector
-will not terminate a goroutine even if the channels it is blocked on are unreachable.
+
+Goroutines可以会因阻塞channel
 
 Even when goroutines do not leak, leaving them in-flight when they are no longer
 needed can cause other subtle and hard-to-diagnose problems. Sends on closed channels
