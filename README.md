@@ -27,8 +27,7 @@
 * [Package Comments](#package-comments)
 * [Package Names](#package-names)
 * [Pass Values](#pass-values)
-* [Receiver Names](#receiver-names)
-* [Receiver Type](#receiver-type)
+* [Receiver](#receiver)
 * [Synchronous Functions](#synchronous-functions)
 * [Useful Test Failures](#useful-test-failures)
 
@@ -520,7 +519,8 @@ Go中变量名应尽量短。对于局部变量尤其如此，首选`c`作为`li
 
 包名应当简洁、清晰、意义深刻。按照惯例，包名应该由小写字母组成，不要使用下划线或混合大小写。
 
-包中名称的所有引用都将会使用到包名，所以你可以省略包中名称的标识符。例如，如果你在包`chubby`中有名称`ChubbyFile`,用户使用时会写成`chubby.ChubbyFile`，可以精简为`File`，用户即可写成`chubby.File`。
+包中名称的所有引用都将会使用到包名，所以你可以省略包中名称的标识符。
+例如，`chubby.ChubbyFile`，可以精简为`chubby.File`。
 
 请注意避免使用无意义的包名称，如 util,common,misc,api,types和interfaces。
 
@@ -536,27 +536,26 @@ http://blog.golang.org/package-names
 
 常见的传指针的情况有：传递一个string的指针、指向接口值(`*io.Reader`)的指针;这两种情况下，值本身都是固定的，可以直接传递。
 
-对于大型数据结构，或者是小型的可能增长的结构，请考虑传递指针。
+对于大型数据结构，或者是小型的可能增长的结构，请考虑传指针。
 
 更多情况请见 [Receiver Type](#receiver-type)
 
-## Receiver Names
+## Receiver 
 
-方法receiver的名称应该反映其身份；通常，其类型的一个或两个字母缩写就足够了(例如"client"的"c"或"cl").请不要使用通用名称如"me", "this" 或 "self"，这是面向对象语言的典型标识符，它们更强调方法而不是功能。方法receiver的名称不必像方法参数那样具有描述性，因为它的作用是显而易见的。它可以非常简洁，因为它几乎出现在每个方法调用上。请始终保持名称不变，如果你在一个地方命名receiver为 "c"，那么请不要在另一处叫其"cl"
+### 名称
+	方法receiver的名称应该反映其身份；通常，其类型的一个或两个字母缩写就足够了(例如"client"的"c"或"cl")。请不要使用通用名称如"me", "this" 或 "self"。请始终保持名称不变，如果你在一个地方命名receiver为 "c"，那么请不要在另一处叫其"cl"
+### 指针还是值
+	如果您不知道怎么决定，请使用指针。但有时候receiver为值也挺有用，这种通常是出于效率的原因，且值为小的不变结构或基本类型的值。
 
-## Receiver Type
-
-选择在方法上使用值还是指针作为receiver可能很困难，尤其是对于新的Go程序员。如果您不知道怎么决定，请使用指针。但有时候receiver为值也挺有用，这种通常是出于效率的原因，且值为小的不变结构或基本类型的值。
-
-一些建议：
-  * 如果receiver为map，func或者chan，请不要使用指向它们的指针。如果receiver为切片并且该方法不会重新分配切片，则请不要使用指针。
-  * 如果方法需要改变receiver，则必须使用指针。
-  * 如果receiver包含了sync.Mutex 或类似同步字段的结构，则receiver必须是指针以避免被拷贝。
-  * 如果receiver是一个大的数组或结构体，指针将更加高效。
-  * 如果需要在方法中改变receiver的值，则必须使用指针
-  * 如果receiver是结构体，数组或切片这种成员是一个指向可变内容的指针时，选择指针receiver更为合适，这将使读者更容易明白方法意图。
-  * 如果receiver是一个小数组或结构体，没有可变的字段和指针，或者是一个简单的基本类型，int或者string，此时使用值reveiver更有道理。这可以减少垃圾得产生，如果将值传递给值方法，则可以使用堆栈上的副本而不是在堆上重新分配(尽管编译器试图避免这种情况，但它并不能每次都成功)。不要因为这一点就不加考虑地选择值receiver
-  * 最后，如果不清楚该怎么用，请使用指针
+	一些建议：
+	  * 如果receiver为map，func或者chan，请不要使用指向它们的指针。如果receiver为切片并且该方法不会重新分配切片，则请不要使用指针。
+	  * 如果方法需要改变receiver，则必须使用指针。
+	  * 如果receiver包含了sync.Mutex 或类似同步字段的结构，则receiver必须是指针以避免被拷贝。
+	  * 如果receiver是一个大的数组或结构体，指针将更加高效。
+	  * 如果需要在方法中改变receiver的值，则必须使用指针
+	  * 如果receiver是结构体，数组或切片这种成员是一个指向可变内容的指针时，选择指针receiver更为合适，这将使读者更容易明白方法意图。
+	  * 如果receiver是一个小数组或结构体，没有可变的字段和指针，或者是一个简单的基本类型，int或者string，此时使用值reveiver更有道理。这可以减少垃圾得产生，如果将值传递给值方法，则可以使用堆栈上的副本而不是在堆上重新分配(尽管编译器试图避免这种情况，但它并不能每次都成功)。不要因为这一点就不加考虑地选择值receiver
+	  * 最后，如果不清楚该怎么用，请使用指针
 
 ## Synchronous Functions
 
