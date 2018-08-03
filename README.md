@@ -568,8 +568,8 @@ http://blog.golang.org/package-names
 
 ## Useful Test Failures
 
-测试失败时应当返回有效的错误信息，说明错误在哪，输入是什么，输出时什么，期望输出是什么。编写一堆断言函数是个不错的选择，但请确保你的函数产生游泳的错误信息。
-假定测试人员不是你和你的团队。一个典型的测试失败形如：
+测试失败时应当返回有效的错误信息，说明错误在哪，输入是什么，输出时什么，期望输出是什么。
+一个典型的测试条件形如：
 
 ```go
 if got != tt.want {
@@ -577,16 +577,8 @@ if got != tt.want {
 }
 ```
 
-请注意此处的命令是 `实际结果 != 预期结果`.一些测试框架鼓励程序员编写： 0 != x, "expected 0, got x",这种代码，g语言并不推荐.
+请注意此处的命令是 `实际结果 != 预期结果`.一些测试框架鼓励程序员编写： 0 != x, "expected 0, got x"，go并不推荐。
 
-
-Another common technique to disambiguate failing tests when using a test helper with different input is to wrap each caller with a different TestFoo function, so the test fails with that name:
-
-```go
-func TestSingleValue(t *testing.T) { testHelper(t, []int{80}) }
-func TestNoValues(t *testing.T)    { testHelper(t, []int{}) }
-```
-
-在任何情况下，您有责任提供有用的错误信息，一边将来调试您的代码
+在任何情况下，您有责任提供有用的错误信息，以便将来调试您的代码。
 
 
