@@ -34,24 +34,24 @@
 
 ## Gofmt
 
-  你可以在你的代码中运行 [Gofmt](https://golang.org/cmd/gofmt/) 以自动修复大多数代码格式问题。几乎所有的代码都使用 `gofmt`。如果使用[liteide](https://github.com/visualfc/liteide)编写Go代码时，使用ctrl+s即可调用gofmt。
+  你可以在你的代码中运行 [Gofmt](https://golang.org/cmd/gofmt/) 以解决大多数代码格式问题。几乎所有的代码都使用 `gofmt`。如果使用[liteide](https://github.com/visualfc/liteide)编写Go代码时，使用ctrl+s即可调用gofmt。
   另一种方法是使用 [goimports](https://godoc.org/golang.org/x/tools/cmd/goimports)，它是 `gofmt`的超集，可根据需要添加（删除）行。
   
 ## Comment Sentences
 
   参考 [https://golang.org/doc/effective_go.html#commentary] 。
   
-  所有顶级的、导出的名称都应当有注释，并且未导出的平凡函数和声明也应该具备注释。  
+  所有名称都应该有注释  
   
   Go语言提供C风格的`/* */`块注释和C++风格的`//`行注释。
   
-  每个包都应该有一个包注释，对于多文件包，注释只需要出现在任意一个文件中。包注释应当介绍包，提供整个包相关的信息。
+  包应该有一个包注释，对于多文件包，注释只需要出现在任意一个文件中。包注释应当提供整个包相关的信息。
   
-  注释的句子应当具有完整性，即使会显得啰嗦多余,但这使得它们在提取到文档时能保持良好的格式。在顶级声明之前出现的注释（即包注释）将与声明一起提取，作为项目的解释性文本。这些注释的风格和内容决定了godoc产生的文档的质量。
+  注释的句子应当具有完整性，这使得它们在提取到文档时能保持良好的格式。使用godoc时包注释将与声明一起提取，作为项目的解释性文本。这些注释的风格和内容决定了文档的质量。
   
-  注释应当以描述的事物名称开头，以句点结束，方便更快了解注释内容。
+  注释应当以描述的事物名称开头，以句点（或者 ! ? ）结束。
   
-  参考以下格式
+  参考以下格式：
 
 ```go
 // Request represents a request to run a command.
@@ -83,26 +83,23 @@ The syntax of the regular expressions accepted is:
 package regexp
 ```
 
-请注意，除了句点(.)外，还有很多符号可以作为替代，比如( ? , !)。除此之外，还有许多工具使用注释来标记类型和方法，(如 easyjson:json 和 golint 的MATCH)。这使得这条规则难以形式化
-
-
 ## Contexts
 
 Go提供了`context`包来管理gorountine的生命周期。
 
-`context.Context`类型的值囊括了跨API和进程边界的安全凭证，跟踪信息，结束时间和取消信号。
+`context.Context`类型的值包括了跨API和进程边界的安全凭证，跟踪信息，结束时间和取消信号。
 
 使用context包时请遵循以下规则：
 
-* 不要将 Contexts 放入结构体，相反context应该作为第一个参数传入，命名为ctx。 不过也有例外，要求函数签名(method signature)必须与标准库或者第三方库中的接口相匹配。
+* 不要将 Contexts 放入结构体，context应该作为第一个参数传入。 不过也有例外，函数签名(method signature)必须与标准库或者第三方库中的接口相匹配
 ```go
 func F(ctx context.Context, /* other arguments */) {}
 ```
-* 即使函数允许，也不要传入nil的 Context。如果不知道用哪种 Context，可以使用context.TODO()。
+* 即使函数允许，也不要传入nil的 Context。如果不知道用哪种 Context，可以使用context.TODO()
 
 * 使用context的Value相关方法只应该用于在程序和接口中传递的和请求相关的元数据，不要用它来传递一些可选的参数
 
-* 相同的 Context 可以传递给共享结束时间、取消信号、安全凭证和父进程追踪等信息的多个goroutine；Context 是并发安全的。
+* 相同的 Context 可以传递给共享结束时间、取消信号、安全凭证和父进程追踪等信息的多个goroutine，Context 是并发安全的
 
 * 从不做特定请求的函数可以使用 context.Background()，但即使您认为不需要，也可以在传递Context时使用错误(error)。如果您有充分的理由认为替代方案是错误的，那么只能直接使用context.Background()
 
@@ -140,17 +137,17 @@ func main() {
 
 当你需要使用goruntines时，请确保它们什么时候/什么条件下退出。
 
-Goroutines可以会因阻塞channel的send或者receives而泄露,即使被阻塞的通道无法访问，垃圾收集器也不会终止goroutine。
+Goroutines可能会因阻塞channel的send或者receives而泄露,即使被阻塞的通道无法访问，垃圾收集器也不会终止goroutine。
 
-即使gorountine没有泄露，当不再需要它们时将它们继续运行会导致其他微妙且难以诊断的问题。Sends on closed channels panic.即使在不需要结果后，修改正在使用的数据也会导致数据竞争，并且将gorountine 置于 in-flight 状态任意时常也会导致不可预测的内存消耗。
+即使gorountine没有泄露，当不再需要它们时仍在继续运行会导致难以诊断的问题。即使在不需要结果后，修改正在使用的数据也会导致数据竞争。
 
 尽量保证并发代码足够简单，使gorountine的生命周期更明显。如果难以做到，请记录gorountines退出的时间和原因。
 
 ## Copying
 
-为了避免意外的别名(alias)，从另一个包复制结构时要小心。比如， `bytes.Buffer` 类型包含了 `[]byte` 切片类型，并且作为小字符串的优化，可被较小的字节数组引用。如果你拷贝了一个`Buffer`，拷贝中的切片可能会alias原始数组中的切片，从而导致后续的操作带来令人惊讶的结果。
+为了避免意外的别名(alias)，从另一个包复制结构时要小心。比如， `bytes.Buffer` 类型包含了 `[]byte` 切片类型，并且作为小字符串的优化，可被较小的字节数组引用。如果你拷贝了一个`Buffer`，拷贝中的切片可能会alias原始数组中的切片，从而导致后续的操作带来不可预测的结果。
 
-通常来说，如果一个类型 `T`其方法与指针结构相关，那么请不要拷贝 `T`的值
+通常来说，如果一个类型 `T`其方法与指针结构相关，那么请不要拷贝 `T`的值。
 
 ## Declaring Empty Slices
 
@@ -172,14 +169,14 @@ t := []string{}
 
 在设计接口时，应当避免因nil切片和non-nil切片带来的不同表现，因为这可能会导致细微的编码错误。
 
-有关Go中nil的更多讨论，请参阅 Francesc Campoy 的演讲 [Understanding Nil](https://www.youtube.com/watch?v=ynoY2xz-F8s).
+有关nil的更多讨论，参考 [Understanding Nil](https://www.youtube.com/watch?v=ynoY2xz-F8s).
 
 
 ## Crypto Rand
 
 请不要使用包 `math/rand` 来生成密钥，即使是一次性的。如果不提供种子，则密钥完全可以被预测到。就算用`time.Nanoseconds()`作为种子，也仅仅只有几个位上的差别。
 
-相反，使用`crypto/rand`'s Reader作为代替。并且如果你需要生成文本，打印成16进制或者base64类型即可。
+使用`crypto/rand`'s Reader作为代替。并且如果你需要生成文本，打印成16进制或者base64类型即可。
 
 ``` go
 import (
@@ -203,17 +200,19 @@ func Key() string {
 
 ## Panic
 
-不要使用`panic`作为日常错误处理机制（除非你知道你在干什么），请使用`error`或者多返回值。
+不要使用`panic`作为日常错误处理机制（除非你知道你在干什么），请使用`error`。
 
-参阅 https://golang.org/doc/effective_go.html#panic. 
+参考 https://golang.org/doc/effective_go.html#panic. 
 
 ## Error Strings
 
-错误信息的字符串不应该大写（除非以专有名词或首字母缩略词开头）或以标点符号结尾，因为它们通常是在其他上下文后打印的。也就是说，使用  `fmt.Errorf("something bad")` 而不是 `fmt.Errorf("Something bad")` 。
+错误信息的字符串不应该大写（除非以专有名词或首字母缩略词开头）或以标点符号结尾，因为它们通常是在其他上下文后打印的。
+
+使用  `fmt.Errorf("something bad")` 而不是 `fmt.Errorf("Something bad")` 。
 
 ## Handle Errors
 
-请不要使用`_`丢弃错误。如果一个函数返回一个错误，检查并确保函数运行成功。处理错误，返回错误，必要情况下请panic。
+请不要使用`_`丢弃错误。如果一个函数返回一个错误，请检查错误，处理错误，必要情况下请panic。
 
 标准库函数通常会向调用者返回某种错误指示，比如os.Open不仅在失败时返回一个nil指针，它还返回一个描述错误的错误值。如果不确保调用函数的成功返回，后续代码的行为将变得不可预测。
 
@@ -232,7 +231,7 @@ Parse(Lookup(key))  // returns "parse failure for value" instead of "no value fo
 ```
 
 Go语言对多个返回值的支持提供了更好的解决方案。
-相比要求客户端检查一个带错误情况的值（比如result = -1 时应当是执行错误了，需要特别检查）,函数应该返回一个附加值以指示其他返回值是否有效。此返回值可能是一个error，或者在不需要解释时可以是bool，并且应当位于返回值的最后。
+相比要求客户端特判返回值情况，函数应该在最后返回一个附加值以指示其他返回值是否有效。此返回值可能是一个error，或者在不需要解释时可以是bool。
 
 ``` go
 // Lookup returns the value for key or ok=false if there is no mapping for key.
@@ -255,15 +254,14 @@ return Parse(value)
 ```
 
 此规则适用于导出的函数，但对未导出的函数也很有用。
-
-返回值如 nil， ""， 0 和 -1 都可以作为函数的有效返回值，即调用者不需要针对结果的不同做区分处理。
-
+如 nil， ""， 0 和 -1 都可以作为函数的无效返回值。
 一些标准库函数，比如包 "strings" 中的函数，返回值都会附带一个err.这极大地简化了花在字符串上的操作，代价是需要程序员花更多的功夫来处理err。
+
 总而言之，通常情况下，Go代码应额外返回一个error值.
 
 ## Indent Error Flow
 
-尝试尽量减少代码缩进，并缩进错误处理，在获取错误后立即处理错误信息。这通常可以提高代码的可阅读性。
+尽量减少代码缩进，在获取错误后立即处理错误信息。这通常可以提高代码的可阅读性。
 
 例如，不要写成：
 
@@ -295,7 +293,7 @@ if x, err := f(); err != nil {
 	// use x
 }
 ```
-那么这可能需要将变量的声明提到它自己的一行：
+那么这可能需要将变量的声明另提一行：
 
 ```go
 x, err := f()
@@ -308,7 +306,7 @@ if err != nil {
 ## Examples
 
 添加新的包时，请包含预期用法的示例。可以是一个可运行的例子或者演示完整调用的简单测试
-了解更多有关 [可测试示例函数](https://blog.golang.org/examples)
+参考 [可测试示例函数](https://blog.golang.org/examples)
 
 ## Imports
 
@@ -511,6 +509,13 @@ package main
 
 [获取更多有关包注释的规范](https://golang.org/doc/effective_go.html#commentary)
 
+
+## Variable Names
+
+Go中变量名应尽量短。对于局部变量尤其如此，首选`c`作为`lineCount`,`i`作为`sliceIndex`。
+
+基本规则：名称使用的地方距其声明的地方越远，则名称必须越具描述性。对一个方法receiver，一个或两个字母就足够了。循环索引或读取之类的常见变量可以使单个字母(`i r`)，更多不常见的事物和全局变量需要更具描述性的名称。
+
 ## Package Names
 
 包名应当简洁、清晰、意义深刻。按照惯例，包名应该由小写字母组成，不要使用下划线或混合大小写。
@@ -574,7 +579,6 @@ if got != tt.want {
 
 请注意此处的命令是 `实际结果 != 预期结果`.一些测试框架鼓励程序员编写： 0 != x, "expected 0, got x",这种代码，g语言并不推荐.
 
-如果这样看起来很累赘，你可以写一个 [[table-driven test|TableDrivenTests]].
 
 Another common technique to disambiguate failing tests when using a test helper with different input is to wrap each caller with a different TestFoo function, so the test fails with that name:
 
@@ -585,9 +589,4 @@ func TestNoValues(t *testing.T)    { testHelper(t, []int{}) }
 
 在任何情况下，您有责任提供有用的错误信息，一边将来调试您的代码
 
-## Variable Names
-
-Go中变量名应尽量短。对于局部变量尤其如此，首选`c`作为`lineCount`,`i`作为`sliceIndex`。
-
-基本规则：名称使用的地方距其声明的地方越远，则名称必须越具描述性。对一个方法receiver，一个或两个字母就足够了。循环索引或读取之类的常见变量可以使单个字母(`i r`)，更多不常见的事物和全局变量需要更具描述性的名称。
 
