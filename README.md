@@ -35,7 +35,7 @@
 
 ## Gofmt
 
-  你可以在你的代码中运行 [Gofmt]("https://golang.org/cmd/gofmt/") 以自动修复大多数代码格式问题。几乎所有的代码都使用 `gofmt`。<br>
+  你可以在你的代码中运行 [Gofmt]("https://golang.org/cmd/gofmt/") 以自动修复大多数代码格式问题。几乎所有的代码都使用 `gofmt`.<br>
   另一种方法是使用[goimports]("https://godoc.org/golang.org/x/tools/cmd/goimports" )，它是 `gofmt`的超集，可根据需要添加（删除）行。
 ## Comment Sentences
 
@@ -288,7 +288,7 @@ if err != nil {
 
 ## Initialisms
 
-名称中的单词如果是首字母或首字母缩略词（例如 "URL" 或 "NATO"），应当具有一致的大小写. 例如，"URL" 应写为 "URL" 或"url"，而不是 "Url".
+名称中的单词如果是首字母或首字母缩略词（例如 "URL" 或 "NATO")，应当具有一致的大小写. 例如，"URL" 应写为 "URL" 或"url"，而不是 "Url".
 举个例子： ServerHTTP与ServerHttp，应当使用前者.
 对于具有多个初始化初始化“单词”的标识符，使用例如 "xmlHTTPRequest" 或 "XMLHTTPRequest".
 
@@ -404,7 +404,7 @@ func (f *Foo) Location() (lat, long float64, err error)
 
 ## Package Comments
 
-Package comments, like all comments to be presented by godoc, must appear adjacent to the package clause, with no blank line.
+与godoc呈现的所有注释一样，包的注释必须出现在package子句的旁边，且没有空行
 
 ```go
 // Package math provides basic constants and mathematical functions.
@@ -420,13 +420,13 @@ output such as HTML.
 package template
 ```
 
-For "package main" comments, other styles of comment are fine after the binary name (and it may be capitalized if it comes first), For example, for a `package main` in the directory `seedgen` you could write:
+对于main包的注释，很多种注释格式都是可以接受的，比如在目录`seedgen`中的 `package main`包，注释可以这下写:
 
 ``` go
 // Binary seedgen ...
 package main
 ```
-or
+或
 ```go
 // Command seedgen ...
 package main
@@ -436,74 +436,70 @@ or
 // Program seedgen ...
 package main
 ```
-or
+或
 ```go
 // The seedgen command ...
 package main
 ```
-or
+或
 ```go
 // The seedgen program ...
 package main
 ```
-or
+或
 ```go
 // Seedgen ..
 package main
 ```
+请注意，以小写字母开头的句子不再包注释的可接受选项中，因为它们是公开可见的，应当用合适的英语携程，包括将第一个词首字母大写。
 
-These are examples, and sensible variants of these are acceptable.
-
-Note that starting the sentence with a lower-case word is not among the
-acceptable options for package comments, as these are publicly-visible and
-should be written in proper English, including capitalizing the first word
-of the sentence. When the binary name is the first word, capitalizing it is
-required even though it does not strictly match the spelling of the
-command-line invocation.
-
-See https://golang.org/doc/effective_go.html#commentary for more information about commentary conventions.
+ https://golang.org/doc/effective_go.html#commentary 获取更多有关包注释的规范
 
 ## Package Names
 
-All references to names in your package will be done using the package name, 
-so you can omit that name from the identifiers. For example, if you are in package chubby, 
-you don't need type ChubbyFile, which clients will write as `chubby.ChubbyFile`.
-Instead, name the type `File`, which clients will write as `chubby.File`.
-Avoid meaningless package names like util, common, misc, api, types, and interfaces. See http://golang.org/doc/effective_go.html#package-names and
-http://blog.golang.org/package-names for more.
+包中名称的所有引用都将使用包名完成，所以你可以省略包中名称的标识符。例如，如果你在包`chubby`中有名称`ChubbyFile`,用户使用时会写成`chubby.ChubbyFile`,相反，将名称命名为`File`，用户即可写成`chubby.File`.
+
+请注意避免使用无意义的包名称，如 util,common,misc,api,types和interfaces
+
+参考
+http://golang.org/doc/effective_go.html#package-names 
+http://blog.golang.org/package-names 
 
 ## Pass Values
 
-Don't pass pointers as function arguments just to save a few bytes.  If a function refers to its argument `x` only as `*x` throughout, then the argument shouldn't be a pointer.  Common instances of this include passing a pointer to a string (`*string`) or a pointer to an interface value (`*io.Reader`).  In both cases the value itself is a fixed size and can be passed directly.  This advice does not apply to large structs, or even small structs that might grow.
+不要为了节省几个字节而传指针给函数。如果函数仅仅将其参数"x"作为`*x`引用，那么参数就不应该是指针。
+常见的传指针的情况有：传递一个string的指针、指向接口值(`*io.Reader`)的指针;这两种情况下，值本身都是固定的，可以直接传递.
+此建议不适用于大型数据结构，甚至是小型的可能增长的结构
 
 ## Receiver Names
 
-The name of a method's receiver should be a reflection of its identity; often a one or two letter abbreviation of its type suffices (such as "c" or "cl" for "Client"). Don't use generic names such as "me", "this" or "self", identifiers typical of object-oriented languages that place more emphasis on methods as opposed to functions. The name need not be as descriptive as that of a method argument, as its role is obvious and serves no documentary purpose. It can be very short as it will appear on almost every line of every method of the type; familiarity admits brevity. Be consistent, too: if you call the receiver "c" in one method, don't call it "cl" in another.
+方法接收方的名称应该反映其身份；通常，其类型的一个或两个字母缩写就足够了(例如"client"的"c"或"cl").请不要使用通用名称如"me", "this" 或 "self"，这是面向对象语言的典型标识符，它们更强调方法而不是函数。方法接受方的名称不必像方法参数那样具有描述性，因为它的作用是显而易见的。它可以非常简洁，因为它几乎出现在每种类型的每个方法调用上。始终如一，如果你在一个方法中命名接收方为 "c"，那么请不要唉另一处叫其"cl"
 
 ## Receiver Type
 
-Choosing whether to use a value or pointer receiver on methods can be difficult, especially to new Go programmers.  If in doubt, use a pointer, but there are times when a value receiver makes sense, usually for reasons of efficiency, such as for small unchanging structs or values of basic type. Some useful guidelines:
+选择在方法上使用值还是指针作为接收方可能很困难，尤其是对于新的Go程序员。如果您不知道怎么决定，请使用指针。但有时候接收方为值也挺有用，这种通常是出于效率的原因，且值为小的不变结构或基本类型的值。一些建议：
 
-  * If the receiver is a map, func or chan, don't use a pointer to them. If the receiver is a slice and the method doesn't reslice or reallocate the slice, don't use a pointer to it.
-  * If the method needs to mutate the receiver, the receiver must be a pointer.
-  * If the receiver is a struct that contains a sync.Mutex or similar synchronizing field, the receiver must be a pointer to avoid copying.
-  * If the receiver is a large struct or array, a pointer receiver is more efficient.  How large is large?  Assume it's equivalent to passing all its elements as arguments to the method.  If that feels too large, it's also too large for the receiver.
-  * Can function or methods, either concurrently or when called from this method, be mutating the receiver? A value type creates a copy of the receiver when the method is invoked, so outside updates will not be applied to this receiver. If changes must be visible in the original receiver, the receiver must be a pointer.
-  * If the receiver is a struct, array or slice and any of its elements is a pointer to something that might be mutating, prefer a pointer receiver, as it will make the intention more clear to the reader.
-  * If the receiver is a small array or struct that is naturally a value type (for instance, something like the time.Time type), with no mutable fields and no pointers, or is just a simple basic type such as int or string, a value receiver makes sense.  A value receiver can reduce the amount of garbage that can be generated; if a value is passed to a value method, an on-stack copy can be used instead of allocating on the heap. (The compiler tries to be smart about avoiding this allocation, but it can't always succeed.) Don't choose a value receiver type for this reason without profiling first.
-  * Finally, when in doubt, use a pointer receiver.
+  * 如果接收方式map，func或者chan，请不要使用指向它们的指针。如果接收方式切片并且该方法不会重新分配切片，则请不要使用指针。
+  * 如果方法需要改变接收方，则必须使用指针。
+  * 如果接收方是包含了sync.Mutex 或类似同步字段的结构，则接收方必须是指针以避免被拷贝。
+  * 如果接收方是一个大的数组或结构体，指针将更加高效。
+  * 如果需要在方法中改变receiver的值，则必须使用指针
+  * 如果receiver是结构体，数组或切片这种成员是一个指向可变内容的指针时，选择指针receiver更为合适，这将使读者更容易明白方法意图。
+  * 如果receiver是一个小数组或结构体，没有可变的字段和指针，或者是一个简单的基本类型，int或者string，此时使用值reveiver更有道理。这可以减少垃圾得产生，如果将值传递给值方法，则可以使用堆栈上的副本而不是在堆上重新分配(尽管编译器试图避免这种情况，但它并不能每次都成功)。不要因为这一点就不加考虑地选择值receiver
+  * 最后，如果不清楚该怎么用，请使用指针作为receiver
 
 ## Synchronous Functions
 
-Prefer synchronous functions - functions which return their results directly or finish any callbacks or channel ops before returning - over asynchronous ones.
+相比异步函数，应当首选同步函数 - 直接返回结果或在返回之前完成任何回调或通道操作的函数。
 
-Synchronous functions keep goroutines localized within a call, making it easier to reason about their lifetimes and avoid leaks and data races. They're also easier to test: the caller can pass an input and check the output without the need for polling or synchronization.
+同步函数使得gorountine在调用中本地化，更容易推断其生命周期并避免泄露和数据竞争。它们也更容易测试:调用者可以传递输入并检查输出，而无需轮询或同步。
 
-If callers need more concurrency, they can add it easily by calling the function from a separate goroutine. But it is quite difficult - sometimes impossible - to remove unnecessary concurrency at the caller side.
+如果调用者需要更多的并发，他们可以简单地在单独的gorountine中调用函数来实现。但在调用者端删除不必要的并发是非常困难甚至是不可能的。
 
 ## Useful Test Failures
 
-Tests should fail with helpful messages saying what was wrong, with what inputs, what was actually got, and what was expected.  It may be tempting to write a bunch of assertFoo helpers, but be sure your helpers produce useful error messages.  Assume that the person debugging your failing test is not you, and is not your team.  A typical Go test fails like:
+测试失败时应当返回有效的错误信息，说明错误在哪，输入是什么，输出时什么，期望输出是什么。编写一堆断言函数是个不错的选择，但请确保你的函数产生游泳的错误信息。
+假定测试人员不是你和你的团队。一个典型的测试失败形如：
 
 ```go
 if got != tt.want {
@@ -511,9 +507,9 @@ if got != tt.want {
 }
 ```
 
-Note that the order here is actual != expected, and the message uses that order too. Some test frameworks encourage writing these backwards: 0 != x, "expected 0, got x", and so on. Go does not.
+请注意此处的命令是 `实际结果 != 预期结果`.一些测试框架鼓励程序员编写： 0 != x, "expected 0, got x",这种代码，g语言并不推荐.
 
-If that seems like a lot of typing, you may want to write a [[table-driven test|TableDrivenTests]].
+如果这样看起来像敲了很多字，你可以写一个 [[table-driven test|TableDrivenTests]].
 
 Another common technique to disambiguate failing tests when using a test helper with different input is to wrap each caller with a different TestFoo function, so the test fails with that name:
 
@@ -522,10 +518,11 @@ func TestSingleValue(t *testing.T) { testHelper(t, []int{80}) }
 func TestNoValues(t *testing.T)    { testHelper(t, []int{}) }
 ```
 
-In any case, the onus is on you to fail with a helpful message to whoever's debugging your code in the future.
+在任何情况下，您有责任提供有用的错误信息，一边将来调试您的代码
 
 ## Variable Names
 
-Variable names in Go should be short rather than long.  This is especially true for local variables with limited scope.  Prefer `c` to `lineCount`.  Prefer `i` to `sliceIndex`.
+Go中变量名应尽量短。对于局部变量尤其如此，首选`c`作为`lineCount`,`i`作为`sliceIndex`.
 
-The basic rule: the further from its declaration that a name is used, the more descriptive the name must be. For a method receiver, one or two letters is sufficient. Common variables such as loop indices and readers can be a single letter (`i`, `r`). More unusual things and global variables need more descriptive names.
+基本规则：名称使用的地方距其声明的地方越远，则名称必须越具描述性。对一个方法receiver，一个或两个字母就足够了。循环索引或读取之类的常见变量可以使单个字母(`i r`)，更多不常见的事物和全局变量需要更具描述性的名称.
+
