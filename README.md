@@ -35,13 +35,16 @@
 
 ## Gofmt
 
-  你可以在你的代码中运行 [Gofmt](https://golang.org/cmd/gofmt/) 以自动修复大多数代码格式问题。几乎所有的代码都使用 `gofmt`.<br>
-  另一种方法是使用[goimports](https://godoc.org/golang.org/x/tools/cmd/goimports)，它是 `gofmt`的超集，可根据需要添加（删除）行。
+  你可以在你的代码中运行 [Gofmt](https://golang.org/cmd/gofmt/) 以自动修复大多数代码格式问题。几乎所有的代码都使用 `gofmt`。
+  另一种方法是使用 [goimports](https://godoc.org/golang.org/x/tools/cmd/goimports)，它是 `gofmt`的超集，可根据需要添加（删除）行。
   
 ## Comment Sentences
 
-  参考[https://golang.org/doc/effective_go.html#commentary] 。注释的句子应当具有完整性，即使会显得啰嗦多余。但这种方法使得它们在提取到godoc文档时能保持良好的格式。注释应当以描述的事物名称开头，以句点结束。<br>
-  参考以下格式<br>
+  参考[https://golang.org/doc/effective_go.html#commentary] 。
+  
+  注释的句子应当具有完整性，即使会显得啰嗦多余。但这种方法使得它们在提取到godoc文档时能保持良好的格式。注释应当以描述的事物名称开头，以句点结束。
+  
+  参考以下格式
 
 ```go
 // Request represents a request to run a command.
