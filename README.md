@@ -1,7 +1,9 @@
 # Go编码规范
 
-参考 [Effective Go](https://golang.org/doc/effective_go.html ).
+本文参考自
+     [Effective Go](https://golang.org/doc/effective_go.html ).
      [Golang Code Review](https://github.com/golang/go/wiki/CodeReviewComments#initialisms)
+     如有侵权，请联系我删除。
 
 * [Gofmt](#gofmt)
 * [注释语句](#注释语句)
