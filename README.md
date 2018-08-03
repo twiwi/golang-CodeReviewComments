@@ -526,6 +526,8 @@ package main
 
 ## Package Names
 
+包名应当简洁、清晰、意义深刻。按照惯例，包名应该由小写字母组成，不要使用下划线或混合大小写。
+
 包中名称的所有引用都将会使用到包名，所以你可以省略包中名称的标识符。例如，如果你在包`chubby`中有名称`ChubbyFile`,用户使用时会写成`chubby.ChubbyFile`，可以精简为`File`，用户即可写成`chubby.File`。
 
 请注意避免使用无意义的包名称，如 util,common,misc,api,types和interfaces。
