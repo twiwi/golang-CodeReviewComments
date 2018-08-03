@@ -37,9 +37,10 @@
 
   你可以在你的代码中运行 [Gofmt]("https://golang.org/cmd/gofmt/") 以自动修复大多数代码格式问题。几乎所有的代码都使用 `gofmt`.<br>
   另一种方法是使用[goimports]("https://godoc.org/golang.org/x/tools/cmd/goimports" )，它是 `gofmt`的超集，可根据需要添加（删除）行。
+  
 ## Comment Sentences
 
-  参考[https://golang.org/doc/effective_go.html#commentary]("https://golang.org/doc/effective_go.html#commentary" "悬停显示")。注释的句子应当具有完整性，即使会多于。但这种方法使得它们在提取到godoc文档时能保持良好的格式。注释应当以描述的事物名称开头，以句点结束。<br>
+  参考[https://golang.org/doc/effective_go.html#commentary] 。注释的句子应当具有完整性，即使会显得啰嗦多余。但这种方法使得它们在提取到godoc文档时能保持良好的格式。注释应当以描述的事物名称开头，以句点结束。<br>
   参考以下格式<br>
 
 ```go
@@ -50,17 +51,18 @@ type Request struct { ...
 func Encode(w io.Writer, req *Request) { ...
 ```
 
-请注意，除了句点(.)外，还有很多符号可以作为替代，比如( ? , !)。除此之外，还有许多工具使用注释来标记类型和方法，(如easyjson:json和golint的MATCH)。这使得这条规则难以形式化
+请注意，除了句点(.)外，还有很多符号可以作为替代，比如( ? , !)。除此之外，还有许多工具使用注释来标记类型和方法，(如 easyjson:json 和 golint 的MATCH)。这使得这条规则难以形式化
 
 
 ## Contexts
-context.Context类型的值囊括了跨API和进程边界的安全凭证，跟踪信息，Context应当结束的时间和取消信号。Go程序在整个函数调用链中显式传递上下文，从传入的RPC和HTTP请求到传出请求。
+`context.Context`类型的值囊括了跨API和进程边界的安全凭证，跟踪信息，Context应当结束的时间和取消信号。
 大多数使用Context的函数应该将context.Context作为其第一个参数:
 
 ```go
 func F(ctx context.Context, /* other arguments */) {}
 ```
-从不做特定请求的函数可以使用 context.Background()，但即使您认为不需要，也可以再传递Context时使用错误(err)。如果您有充分的理由认为替代方案是错误的，那么只能直接使用context.Background()
+
+从不做特定请求的函数可以使用 context.Background()，但即使您认为不需要，也可以在传递Context时使用错误(err)。如果您有充分的理由认为替代方案是错误的，那么只能直接使用context.Background()
 
 不要将Context成员添加到一个结构体类型；相而是将ctx作为函数参数添加到需要传递它的该类型的每一个方法上。不过也有例外，函数签名(method signature)必须与标准库或者第三方库中的接口相匹配。
 
@@ -73,7 +75,7 @@ Contexts 是不可变的，因此可以将同一个Context传递给共享结束�
 
 ## Copying
 
-为了避免意外的别名(alias)，从另一个包复制结构时要小心。比如, `bytes.Buffer` 类型包含了 `[]byte` 切片类型，并且作为小字符串的优化，可被较小的字节数组引用。如果你拷贝了一个`Buffer`，拷贝中的切片可能会alias原始数组中的切片，从而导致后续的操作带来令人惊讶的结果。
+为了避免意外的别名(alias)，从另一个包复制结构时要小心。比如， `bytes.Buffer` 类型包含了 `[]byte` 切片类型，并且作为小字符串的优化，可被较小的字节数组引用。如果你拷贝了一个`Buffer`，拷贝中的切片可能会alias原始数组中的切片，从而导致后续的操作带来令人惊讶的结果。
 
 通常来说，如果一个类型 `T`其方法与指针结构相关，那么请不要拷贝 `T`的值
 
@@ -92,9 +94,9 @@ var t []string
 t := []string{}
 ```
 
-前者声明了一个指向nil的切片，后者声明了一个 non-nil 且 len = 0的切片。虽然他们的功能是等价的-它们的 `len` 和`cap` 都是0，但nil切片应当作为首选方案。
+前者声明了一个指向nil的切片，后者声明了一个 non-nil 且 len = 0的切片。虽然他们的功能是等价的：它们的 `len` 和`cap` 都是0，但nil切片应当作为首选方案。
 
-请注意在有些情况下， non-nil切片表现更好，比如当解码JSON对象时，nil切片解码为 `null`, non-nil切片解码为 JSON 数组
+请注意在有些情况下， non-nil 切片表现更好，比如当解码JSON对象时，nil切片解码为 `null`, non-nil 切片解码为 JSON 数组
 
 在设计接口时，应当避免因nil切片和non-nil切片带来的不同表现，因为这可能会导致细微的编码错误。
 
@@ -105,7 +107,6 @@ t := []string{}
 
 请不要使用包 `math/rand`来生成密钥，即使是一次性的。如果不提供种子，则密钥完全可以被预测到。用`time.Nanoseconds()`作为种子，there was just a few bits of entropy.
 相反，使用`crypto/rand`'s Reader作为代替。并且如果你需要生成文本，打印成16进制或者base64类型即可。
-and if you need text, print to hexadecimal or base64:
 
 ``` go
 import (
@@ -135,7 +136,9 @@ func Key() string {
 
 ## Don't Panic
 
-参阅 https://golang.org/doc/effective_go.html#errors. 不要使用`panic`作为日常错误处理机制，请使用`error`或者多返回值。
+不要使用`panic`作为日常错误处理机制，请使用`error`或者多返回值。
+
+参阅 https://golang.org/doc/effective_go.html#errors. 
 
 ## Error Strings
 
@@ -144,22 +147,24 @@ func Key() string {
 ## Examples
 
 添加新的包时，请包含预期用法的示例。可以是一个可运行的例子或者演示完整调用的简单测试
-了解更多有关 [可测试示例函数]("https://blog.golang.org/examples")
+了解更多有关 [可测试示例函数](https://blog.golang.org/examples)
 
 
 ## Goroutine Lifetimes
 
 当你需要使用goruntines时，请确保它们什么时候/什么条件下退出。
 
-Goroutines可以会因阻塞channel的send或者receives而泄露,即使被阻塞的通道无法访问，垃圾收集器也不会终止goroutine
+Goroutines可以会因阻塞channel的send或者receives而泄露,即使被阻塞的通道无法访问，垃圾收集器也不会终止goroutine。
 
-即使gorountine没有泄露，当不再需要它们时将它们继续运行会导致其他微妙且难以诊断的问题。Sends on closed channels panic.即使在不需要结果后，修改正在使用的数据也会导致数据竞争，并且将gorountine 置于 in-flight状态任意时常也会导致不可预测的内存消耗。
+即使gorountine没有泄露，当不再需要它们时将它们继续运行会导致其他微妙且难以诊断的问题。Sends on closed channels panic.即使在不需要结果后，修改正在使用的数据也会导致数据竞争，并且将gorountine 置于 in-flight 状态任意时常也会导致不可预测的内存消耗。
 
 尽量保证并发代码足够简单，使gorountine的生命周期更明显。如果难以做到，请记录gorountines退出的时间和原因。
 
 ## Handle Errors
 
-参考 https://golang.org/doc/effective_go.html#errors. 请不要使用`_`丢弃错误。如果一个函数返回一个错误，检查并确保函数运行成功。处理错误，返回错误，必要情况下请panic。
+请不要使用`_`丢弃错误。如果一个函数返回一个错误，检查并确保函数运行成功。处理错误，返回错误，必要情况下请panic。
+
+参考 https://golang.org/doc/effective_go.html#errors.
 
 ## Imports
 
@@ -184,11 +189,11 @@ import (
 )
 ```
 
-<a href="https://godoc.org/golang.org/x/tools/cmd/goimports">goimports</a> 会帮你规范这些。
+可以使用 <a href="https://godoc.org/golang.org/x/tools/cmd/goimports">goimports</a> 来规范这些。
 
 ## Import Dot
 
-使用 import .导入包在测试中很有用，但由于循环依赖性，它不能成为被测试包的一部分：
+使用 `import .` 导入包在测试中很有用，但由于循环依赖性，它不能成为被测试包的一部分：
 
 ```go
 package foo_test
@@ -198,11 +203,11 @@ import (
 	. "foo"
 )
 ```
-在这种情况下，测试文件不能在包`foo`中，因为它使用了包 `bar/testutil`，它将导入`foo`，所以我们使用`import .`格式导入来让文件伪装成包foo的一部分，即使它并不是。除了这一情况，不要在你的程序中使用`import .`来导入包。它将使程序更难阅读，因为不清楚 Quux 这样的名称是在当前包中还是导入包中。
+在这种情况下，测试文件不能在包`foo`中，因为它使用了同样导入`foo`的包 `bar/testutil`，所以我们使用`import .`格式导入来让测试文件伪装成包foo的一部分，即使它并不是。除了这一情况，不要在你的程序中使用`import .`来导入包。它将使程序更难阅读，因为不清楚 Quux 这样的名称是在当前包中还是导入包中。
 
 ## In-Band Errors
 
-在C语言和类似语言中，函数常常返回-1或 null 值表示错误或者结果缺失。
+在C语言和类似语言中，函数常常返回 -1 或 null 值表示错误或者结果缺失。
 
 ```go
 // Lookup returns the value for key or "" if there is no mapping for key.
@@ -213,13 +218,13 @@ Parse(Lookup(key))  // returns "parse failure for value" instead of "no value fo
 ```
 
 Go语言对多个返回值的支持提供了更好的解决方案。
-相比要求客户端检查一个带错误情况的值,函数应该返回一个附加值以指示其他返回值是否有效。此返回值可能是一个error，或者在不需要解释时可以是bool，并且应当位于返回值的最后。
+相比要求客户端检查一个带错误情况的值（比如result = -1 时应当是执行错误了，需要特别检查）,函数应该返回一个附加值以指示其他返回值是否有效。此返回值可能是一个error，或者在不需要解释时可以是bool，并且应当位于返回值的最后。
 
 ``` go
 // Lookup returns the value for key or ok=false if there is no mapping for key.
 func Lookup(key string) (value string, ok bool)
 ```
-这可以防止调用者错误地使用结果:
+这还可以防止调用者错误地使用结果:
 
 ``` go
 Parse(Lookup(key))  // compile-time error
@@ -237,15 +242,16 @@ return Parse(value)
 
 此规则适用于导出的函数，但对未导出的函数也很有用。
 
-返回值如nil, "", 0, 和-1都可以作为函数的有效返回值，即调用者不需要针对结果的不同做区分处理。
+返回值如 nil， ""， 0 和 -1 都可以作为函数的有效返回值，即调用者不需要针对结果的不同做区分处理。
 
-一些标准库函数，比如包 "strings" 中的函数，返回值都会附带一个err.这极大地简化了字符串操作，代价是需要程序员花更多的功夫.
-通常情况下，Go代码应返回一个error值.
+一些标准库函数，比如包 "strings" 中的函数，返回值都会附带一个err.这极大地简化了花在字符串上的操作，代价是需要程序员花更多的功夫来处理err。
+总而言之，通常情况下，Go代码应额外返回一个error值.
 
 ## Indent Error Flow
 
-尝试将代码路径保持在最小的缩进处，并缩进错误处理，第一个处理错误信息.这通常可以保证快速地检查正常路径来提高代码的可阅读性.
-例如，不要写:
+尝试将代码路径保持在最小的缩进处，并缩进错误处理，第一个处理错误信息。这通常可以保证快速地检查正常路径来提高代码的可阅读性。
+
+例如，不要写成：
 
 ```go
 if err != nil {
@@ -255,7 +261,7 @@ if err != nil {
 }
 ```
 
-代替的写:
+而应该写成：
 
 ```go
 if err != nil {
@@ -265,7 +271,7 @@ if err != nil {
 // normal code
 ```
 
-如果`if`语句有初始化语句，比如:
+如果`if`语句有初始化语句，比如：
 
 ```go
 if x, err := f(); err != nil {
@@ -275,7 +281,7 @@ if x, err := f(); err != nil {
 	// use x
 }
 ```
-那么这可能需要将短变量声明提到它自己的一行:
+那么这可能需要将变量的声明提到它自己的一行：
 
 ```go
 x, err := f()
@@ -288,23 +294,24 @@ if err != nil {
 
 ## Initialisms
 
-名称中的单词如果是首字母或首字母缩略词（例如 "URL" 或 "NATO")，应当具有一致的大小写. 例如，"URL" 应写为 "URL" 或"url"，而不是 "Url".
-举个例子： ServerHTTP与ServerHttp，应当使用前者.
-对于具有多个初始化初始化“单词”的标识符，使用例如 "xmlHTTPRequest" 或 "XMLHTTPRequest".
+名称中的单词如果是首字母或首字母缩略词（例如 "URL" 或 "NATO")，应当具有一致的大小写. 例如，"URL" 应写为 "URL" 或"url"，而不是 "Url"。
 
-当"ID"是标识符的缩写时，此规则也同样适用，因此请写成 "appID" 而不是 "appId"
+举个例子： ServerHTTP与ServerHttp，应当使用前者。
+对于具有多个缩略单词的标识符，使用例如 "xmlHTTPRequest" 或 "XMLHTTPRequest"。
 
-protocol buffer compiler 产生的代码不受此规则的约束。人工编写的代码理应比机器编写的代码保持更高的标准.
+当"ID"是标识符的缩写时，此规则也同样适用，因此请写成 "appID" 而不是 "appId"。
+
+protocol buffer compiler 产生的代码不受此规则的约束。人工编写的代码理应比机器编写的代码保持更高的标准。
 
 
 ## Interfaces
 
-Go语言接口类型通常属于包中的interface类型，而不是实现这些值的包.实现了接口的包应该返回具体的(通常是指针或者结构)类型:这样，新方法可以不需要大量重构就添加到实现中。
+Go语言接口类型通常属于包中的interface类型，而不是实现这些值的包。实现了接口的包应该返回具体的(通常是指针或者结构)类型：这样，新方法可以不需要大量重构就可以添加到实现中。
 
-不要为了模仿而在API的实现端定义接口。
-相反，设计API以便可以使用公共API来进行测试。
+不要“为了模仿”而在API的实现端定义接口。
+相反，设计的API应当能够使用公共的API来进行测试。
 
-在使用之前不要定义接口：在使用中没有真实的例子时，很难看出接口是否必需，更不要说它应该包含哪些方法。
+并且在使用之前不要定义接口：没有真实的例子之前，很难看出接口是否必需，更不要说它应该包含哪些方法。
 
 ``` go
 package consumer  // consumer.go
@@ -335,7 +342,7 @@ func (t defaultThinger) Thing() bool { … }
 func NewThinger() Thinger { return defaultThinger{ … } }
 ```
 
-作为替代返回一个具体类型，让消费者模拟生产者的实现。
+取而代之的，可以直接使用原先的API接口，返回一个具体类型，让消费者模拟生产者的实现。
 
 ``` go
 package producer
@@ -349,15 +356,14 @@ func NewThinger() Thinger { return Thinger{ … } }
 
 ## Line Length
 
-Go代码中没有严格限制行的长度，但请避免使用不舒服的长行。同样，当一行长代码可读性还行时，不要添加换行符来增加行数
+Go代码中没有严格限制行的长度，但请避免使用不舒服的长行。同样，当一行长代码可读性还行时，不要添加换行符来增加行数。
 
-较长的行似乎与长名称有关，尽量避免长的名称。
-
-实际上，这与关于函数应该有多长的建议完全相同。没有规则“函数不应该超过N行”，但肯定有这么长的一个函数，也可以分解为多个小函数来解决。
+较长的行似乎与较长的名称有关，所以请尽量避免长的名称。
+实际上，这与关于函数应该有多长的建议完全相同。没有规则“函数不应该超过N行”，但肯定会有这么长的一个函数，并且这个函数也可以分解为多个小函数来实现相同的功能。
 
 ## Mixed Caps
 
-参考 https://golang.org/doc/effective_go.html#mixed-caps. 即使它打破了其他语言的惯例，这也适用。例如，未导出的常量名为`maxLength` 而不是`MaxLength` 或 `MAX_LENGTH`.
+见 https://golang.org/doc/effective_go.html#mixed-caps. 即使它打破了其他语言的惯例，这也适用。例如，未导出的常量名为`maxLength` 而不是`MaxLength` 或 `MAX_LENGTH`.
 
 也可参考 [Initialisms](https://github.com/golang/go/wiki/CodeReviewComments#initialisms).
 
@@ -377,15 +383,14 @@ func (n *Node) Parent1() *Node
 func (n *Node) Parent2() (*Node, error)
 ```
 
-另一方面，如果函数返回两个或三个相同类型的参数，或者如果从上下文中看不出结果的意义，添加名称可能会有用。不要仅仅为了免于在函数中声明变量而命名结果参数。
+另一方面，如果函数返回两个或三个相同类型的参数，或者如果从上下文中看不出结果的意义，添加名称可能会很有用。但请不要仅仅为了免于在函数中声明变量而直接命名返回结果参数。
 
-不要为了降低实施复杂度，而造成API难以阅读
+总之，不要为了降低实施复杂度，而造成API难以阅读，比如：
 
 ```go
 func (f *Foo) Location() (float64, float64, error)
 ```
-
-劣于
+更优的解决方法：
 
 ```go
 // Location returns f's latitude and longitude.
@@ -393,9 +398,9 @@ func (f *Foo) Location() (float64, float64, error)
 func (f *Foo) Location() (lat, long float64, err error)
 ```
 
-结论： 仅仅为了用返回参数的名称来返回而命名返回参数是不值得的，文档的清晰度比在函数中节约一两行代码更加重要。
+结论： 仅仅为了用返回参数的名称来直接返回而命名返回参数是不值得的，文档的清晰度比在函数中节约一两行代码更加重要。
 
-最后，在某些情况下，您需要命名结果参数才能 change it in a deferred closure
+最后，在某些情况下，如果您需要命名结果参数才能 change it in a deferred closure的话，尽管放手干吧。
 
 
 ## Naked Returns
@@ -404,7 +409,7 @@ func (f *Foo) Location() (lat, long float64, err error)
 
 ## Package Comments
 
-与godoc呈现的所有注释一样，包的注释必须出现在package子句的旁边，且没有空行
+与godoc呈现的所有注释一样，包的注释必须出现在package子句的旁边，且没有空行：
 
 ```go
 // Package math provides basic constants and mathematical functions.
@@ -451,46 +456,53 @@ package main
 // Seedgen ..
 package main
 ```
-请注意，以小写字母开头的句子不再包注释的可接受选项中，因为它们是公开可见的，应当用合适的英语携程，包括将第一个词首字母大写。
+请注意，以小写字母开头的句子不在包注释的可接受选项中，因为包是公开可见的，应当用合适的英语格式写成，包括将第一个词首字母大写。
 
- https://golang.org/doc/effective_go.html#commentary 获取更多有关包注释的规范
+[获取更多有关包注释的规范](https://golang.org/doc/effective_go.html#commentary)
 
 ## Package Names
 
-包中名称的所有引用都将使用包名完成，所以你可以省略包中名称的标识符。例如，如果你在包`chubby`中有名称`ChubbyFile`,用户使用时会写成`chubby.ChubbyFile`,相反，将名称命名为`File`，用户即可写成`chubby.File`.
+包中名称的所有引用都将会使用到包名，所以你可以省略包中名称的标识符。例如，如果你在包`chubby`中有名称`ChubbyFile`,用户使用时会写成`chubby.ChubbyFile`，可以精简为`File`，用户即可写成`chubby.File`。
 
-请注意避免使用无意义的包名称，如 util,common,misc,api,types和interfaces
+请注意避免使用无意义的包名称，如 util,common,misc,api,types和interfaces。
 
-参考
+参考：
+
 http://golang.org/doc/effective_go.html#package-names 
+
 http://blog.golang.org/package-names 
 
 ## Pass Values
 
-不要为了节省几个字节而传指针给函数。如果函数仅仅将其参数"x"作为`*x`引用，那么参数就不应该是指针。
-常见的传指针的情况有：传递一个string的指针、指向接口值(`*io.Reader`)的指针;这两种情况下，值本身都是固定的，可以直接传递.
-此建议不适用于大型数据结构，甚至是小型的可能增长的结构
+不要仅仅为了节省几个字节而传指针给函数。如果函数仅仅将其参数"x"作为`*x`使用，那么参数就不应该是指针。
+
+常见的传指针的情况有：传递一个string的指针、指向接口值(`*io.Reader`)的指针;这两种情况下，值本身都是固定的，可以直接传递。
+
+对于大型数据结构，或者是小型的可能增长的结构，请考虑传递指针。
+
+更多情况请见 [Receiver Type](#receiver-type)
 
 ## Receiver Names
 
-方法接收方的名称应该反映其身份；通常，其类型的一个或两个字母缩写就足够了(例如"client"的"c"或"cl").请不要使用通用名称如"me", "this" 或 "self"，这是面向对象语言的典型标识符，它们更强调方法而不是函数。方法接受方的名称不必像方法参数那样具有描述性，因为它的作用是显而易见的。它可以非常简洁，因为它几乎出现在每种类型的每个方法调用上。始终如一，如果你在一个方法中命名接收方为 "c"，那么请不要唉另一处叫其"cl"
+方法receiver的名称应该反映其身份；通常，其类型的一个或两个字母缩写就足够了(例如"client"的"c"或"cl").请不要使用通用名称如"me", "this" 或 "self"，这是面向对象语言的典型标识符，它们更强调方法而不是功能。方法receiver的名称不必像方法参数那样具有描述性，因为它的作用是显而易见的。它可以非常简洁，因为它几乎出现在每个方法调用上。请始终保持名称不变，如果你在一个地方命名receiver为 "c"，那么请不要在另一处叫其"cl"
 
 ## Receiver Type
 
-选择在方法上使用值还是指针作为接收方可能很困难，尤其是对于新的Go程序员。如果您不知道怎么决定，请使用指针。但有时候接收方为值也挺有用，这种通常是出于效率的原因，且值为小的不变结构或基本类型的值。一些建议：
+选择在方法上使用值还是指针作为receiver可能很困难，尤其是对于新的Go程序员。如果您不知道怎么决定，请使用指针。但有时候receiver为值也挺有用，这种通常是出于效率的原因，且值为小的不变结构或基本类型的值。
 
-  * 如果接收方式map，func或者chan，请不要使用指向它们的指针。如果接收方式切片并且该方法不会重新分配切片，则请不要使用指针。
-  * 如果方法需要改变接收方，则必须使用指针。
-  * 如果接收方是包含了sync.Mutex 或类似同步字段的结构，则接收方必须是指针以避免被拷贝。
-  * 如果接收方是一个大的数组或结构体，指针将更加高效。
+一些建议：
+  * 如果receiver为map，func或者chan，请不要使用指向它们的指针。如果receiver为切片并且该方法不会重新分配切片，则请不要使用指针。
+  * 如果方法需要改变receiver，则必须使用指针。
+  * 如果receiver包含了sync.Mutex 或类似同步字段的结构，则receiver必须是指针以避免被拷贝。
+  * 如果receiver是一个大的数组或结构体，指针将更加高效。
   * 如果需要在方法中改变receiver的值，则必须使用指针
   * 如果receiver是结构体，数组或切片这种成员是一个指向可变内容的指针时，选择指针receiver更为合适，这将使读者更容易明白方法意图。
   * 如果receiver是一个小数组或结构体，没有可变的字段和指针，或者是一个简单的基本类型，int或者string，此时使用值reveiver更有道理。这可以减少垃圾得产生，如果将值传递给值方法，则可以使用堆栈上的副本而不是在堆上重新分配(尽管编译器试图避免这种情况，但它并不能每次都成功)。不要因为这一点就不加考虑地选择值receiver
-  * 最后，如果不清楚该怎么用，请使用指针作为receiver
+  * 最后，如果不清楚该怎么用，请使用指针
 
 ## Synchronous Functions
 
-相比异步函数，应当首选同步函数 - 直接返回结果或在返回之前完成任何回调或通道操作的函数。
+相比异步函数，应当首选同步函数 —— 直接返回结果或在返回之前完成任何回调或通道操作的函数。
 
 同步函数使得gorountine在调用中本地化，更容易推断其生命周期并避免泄露和数据竞争。它们也更容易测试:调用者可以传递输入并检查输出，而无需轮询或同步。
 
@@ -509,7 +521,7 @@ if got != tt.want {
 
 请注意此处的命令是 `实际结果 != 预期结果`.一些测试框架鼓励程序员编写： 0 != x, "expected 0, got x",这种代码，g语言并不推荐.
 
-如果这样看起来像敲了很多字，你可以写一个 [[table-driven test|TableDrivenTests]].
+如果这样看起来很累赘，你可以写一个 [[table-driven test|TableDrivenTests]].
 
 Another common technique to disambiguate failing tests when using a test helper with different input is to wrap each caller with a different TestFoo function, so the test fails with that name:
 
