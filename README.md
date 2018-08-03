@@ -21,6 +21,7 @@
 * [Interfaces](#interfaces)
 * [Line Length](#line-length)
 * [Name](#name)
+* [Variable Names](#variable-names)
 * [Mixed Caps](#mixed-caps)
 * [Named Result Parameters](#named-result-parameters)
 * [Package Comments](#package-comments)
@@ -30,7 +31,6 @@
 * [Receiver Type](#receiver-type)
 * [Synchronous Functions](#synchronous-functions)
 * [Useful Test Failures](#useful-test-failures)
-* [Variable Names](#variable-names)
 
 ## Gofmt
 
@@ -41,7 +41,7 @@
 
   参考 [https://golang.org/doc/effective_go.html#commentary] 。
   
-  所有名称都应该有注释  
+  所有导出的名称、函数声明、结构声明等都应该有注释  
   
   Go语言提供C风格的`/* */`块注释和C++风格的`//`行注释。
   
