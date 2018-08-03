@@ -1,6 +1,7 @@
-# Go Code Review Comments
+# Go编码规范
 
-参考 [Effective Go](https://golang.org/doc/effective_go.html ). <br>
+参考 [Effective Go](https://golang.org/doc/effective_go.html ).
+     [Golang Code Review](https://github.com/golang/go/wiki/CodeReviewComments#initialisms)
 
 * [Gofmt](#gofmt)
 * [Comment Sentences](#comment-sentences)
@@ -17,12 +18,11 @@
 * [Examples](#examples)
 * [Imports](#imports)
 * [Import Dot](#import-dot)
-* [Initialisms](#initialisms)
 * [Interfaces](#interfaces)
 * [Line Length](#line-length)
+* [Name](#name)
 * [Mixed Caps](#mixed-caps)
 * [Named Result Parameters](#named-result-parameters)
-* [Naked Returns](#naked-returns)
 * [Package Comments](#package-comments)
 * [Package Names](#package-names)
 * [Pass Values](#pass-values)
@@ -34,7 +34,7 @@
 
 ## Gofmt
 
-  你可以在你的代码中运行 [Gofmt](https://golang.org/cmd/gofmt/) 以自动修复大多数代码格式问题。几乎所有的代码都使用 `gofmt`。
+  你可以在你的代码中运行 [Gofmt](https://golang.org/cmd/gofmt/) 以自动修复大多数代码格式问题。几乎所有的代码都使用 `gofmt`。如果使用[liteide](https://github.com/visualfc/liteide)编写Go代码时，使用ctrl+s即可调用gofmt。
   另一种方法是使用 [goimports](https://godoc.org/golang.org/x/tools/cmd/goimports)，它是 `gofmt`的超集，可根据需要添加（删除）行。
   
 ## Comment Sentences
@@ -45,9 +45,9 @@
   
   Go语言提供C风格的`/* */`块注释和C++风格的`//`行注释。
   
-  每个包都应该有一个包注释，为位于package子句前的块注释。对于多文件包，包注释秩序出现在任何一个文件中。包注释应当介绍包，提供整个包相关的信息。
+  每个包都应该有一个包注释，对于多文件包，注释只需要出现在任意一个文件中。包注释应当介绍包，提供整个包相关的信息。
   
-  注释的句子应当具有完整性，即使会显得啰嗦多余。但这种方法使得它们在提取到godoc文档时能保持良好的格式。在顶级声明之前出现的注释（即包注释）将与声明一起提取，作为项目的解释性文本。这些注释的风格和内容决定了godoc产生的文档的质量。
+  注释的句子应当具有完整性，即使会显得啰嗦多余,但这使得它们在提取到文档时能保持良好的格式。在顶级声明之前出现的注释（即包注释）将与声明一起提取，作为项目的解释性文本。这些注释的风格和内容决定了godoc产生的文档的质量。
   
   注释应当以描述的事物名称开头，以句点结束，方便更快了解注释内容。
   
@@ -203,24 +203,19 @@ func Key() string {
 
 ## Panic
 
-不要使用`panic`作为日常错误处理机制，请使用`error`或者多返回值。
+不要使用`panic`作为日常错误处理机制（除非你知道你在干什么），请使用`error`或者多返回值。
 
 参阅 https://golang.org/doc/effective_go.html#panic. 
 
-想调用者报告错误的方式是将error作为额外的返回值返回。但有时候发生错误后程序根本无法继续进行。
-
-因此，有一个内置函数`panic`，实际运行会产生一个运行时错误，这将立即终止程序（可通过recover重新恢复对gorountine的控制并继续执行）。
-
-
 ## Error Strings
 
-错误信息的字符串不应该大写（除非以专有名词或首字母缩略词开头）或以标点符号结尾，因为它们通常是在其他上下文后打印的。也就是说，使用  `fmt.Errorf("something bad")` 而不是 `fmt.Errorf("Something bad")` 。这样的话 `log.Printf("Reading %s: %v", filename, err)` 就不会在字符串中间有大写字母。但这种格式不适合日志记录。
+错误信息的字符串不应该大写（除非以专有名词或首字母缩略词开头）或以标点符号结尾，因为它们通常是在其他上下文后打印的。也就是说，使用  `fmt.Errorf("something bad")` 而不是 `fmt.Errorf("Something bad")` 。
 
 ## Handle Errors
 
 请不要使用`_`丢弃错误。如果一个函数返回一个错误，检查并确保函数运行成功。处理错误，返回错误，必要情况下请panic。
 
-库函数通常会向调用者返回某种错误指示，比如os.Open不仅在失败时返回一个nil指针，它还返回一个描述错误的错误值。如果不确保调用函数的成功返回，后续代码的行为将变得不可预测。
+标准库函数通常会向调用者返回某种错误指示，比如os.Open不仅在失败时返回一个nil指针，它还返回一个描述错误的错误值。如果不确保调用函数的成功返回，后续代码的行为将变得不可预测。
 
 参考 https://golang.org/doc/effective_go.html#errors.
 
@@ -249,7 +244,7 @@ func Lookup(key string) (value string, ok bool)
 Parse(Lookup(key))  // compile-time error
 ```
 
-并且鼓励更强大和可读性更强的代码:
+鼓励编写更强大和可读性更强的代码:
 
 ``` go
 value, ok := Lookup(key)
@@ -268,7 +263,7 @@ return Parse(value)
 
 ## Indent Error Flow
 
-尝试尽量减少代码缩进，并缩进错误处理，在获取错误后立即处理错误信息。这通常可以保证快速地检查正常路径来提高代码的可阅读性。
+尝试尽量减少代码缩进，并缩进错误处理，在获取错误后立即处理错误信息。这通常可以提高代码的可阅读性。
 
 例如，不要写成：
 
@@ -317,9 +312,10 @@ if err != nil {
 
 ## Imports
 
-尽量避免导入包时的重命名，以避免名称冲突。优秀的包名称不应该要求重命名。如果发生名称冲突，尽量重命名本地或项目特定的包。
+尽量避免导入包时的重命名，以避免名称冲突。如果发生名称冲突，尽量重命名本地或项目特定的包。
 
 导入包按名称分组，用空行隔开。
+
 标准库包应始终位于第一组。
 
 ```go
@@ -352,19 +348,6 @@ import (
 )
 ```
 在这种情况下，测试文件不能在包`foo`中，因为它使用了同样导入`foo`的包 `bar/testutil`，所以我们使用`import .`格式导入来让测试文件伪装成包foo的一部分，即使它并不是。除了这一情况，不要在你的程序中使用`import .`来导入包。它将使程序更难阅读，因为不清楚 Quux 这样的名称是在当前包中还是导入包中。
-
-
-## Initialisms
-
-名称中的单词如果是首字母或首字母缩略词（例如 "URL" 或 "NATO")，应当具有一致的大小写. 例如，"URL" 应写为 "URL" 或"url"，而不是 "Url"。
-
-举个例子： ServerHTTP与ServerHttp，应当使用前者。
-对于具有多个缩略单词的标识符，使用例如 "xmlHTTPRequest" 或 "XMLHTTPRequest"。
-
-当"ID"是标识符的缩写时，此规则也同样适用，因此请写成 "appID" 而不是 "appId"。
-
-protocol buffer compiler 产生的代码不受此规则的约束。人工编写的代码理应比机器编写的代码保持更高的标准。
-
 
 ## Interfaces
 
@@ -423,13 +406,21 @@ Go代码中没有严格限制行的长度，但请避免使用不舒服的长行
 较长的行似乎与较长的名称有关，所以请尽量避免长的名称。
 实际上，这与关于函数应该有多长的建议完全相同。没有规则“函数不应该超过N行”，但肯定会有这么长的一个函数，并且这个函数也可以分解为多个小函数来实现相同的功能。
 
+## Name
+
+如果要在其他包使用该名称，请大写首字母。
+
+名称如果是首字母或首字母缩略词（例如 "URL" 或 "NATO")，应当具有一致的大小写. 例如，"URL" 应写为 "URL" 或"url"，而不是 "Url"。
+
+举个例子： ServerHTTP与ServerHttp，应当使用前者。
+对于具有多个缩略单词的标识符，使用例如 "xmlHTTPRequest" 或 "XMLHTTPRequest"。
+当"ID"是标识符的缩写时，此规则也同样适用，因此请写成 "appID" 而不是 "appId"。
+
 ## Mixed Caps
 
-Go语言决定使用MixedCaps或mixedCaps来命名多个单词组合的名称，而不是使用下划线来连接多个单词。即使它打破了其他语言的惯例。
+Go语言决定使用MixedCaps或mixedCaps来命名由多个单词组合的名称，而不是使用下划线来连接多个单词。即使它打破了其他语言的惯例。
 
 例如，未导出的常量名为`maxLength` 而不是`MaxLength` 或 `MAX_LENGTH`。
-
-也可参考 [Initialisms](#initialisms)
 
 ## Named Result Parameters
 
@@ -447,14 +438,14 @@ func (n *Node) Parent1() *Node
 func (n *Node) Parent2() (*Node, error)
 ```
 
-另一方面，如果函数返回两个或三个相同类型的参数时，或者如果从上下文中看不出结果的意义时，给返回参数添加名称可能会很有用。但请不要仅仅为了免于在函数中声明结果变量而直接命名返回结果参数。
+另一方面，如果函数返回值意义不明，给返回参数添加名称可能会很有用。
 
-总之，不要为了降低实施复杂度，而造成API难以阅读，比如：
+总之，尽量提高API可读性，比如：
 
 ```go
 func (f *Foo) Location() (float64, float64, error)
 ```
-更优的解决方法：
+更优的写法：
 
 ```go
 // Location returns f's latitude and longitude.
@@ -462,14 +453,10 @@ func (f *Foo) Location() (float64, float64, error)
 func (f *Foo) Location() (lat, long float64, err error)
 ```
 
-结论： 仅仅为了用返回参数的名称来直接返回而命名返回参数是不值得的，文档的清晰度比在函数中节约一两行代码更加重要。
+结论： 文档的清晰度比节约一两行代码更加重要。
 
-最后，在某些情况下，如果您需要命名结果参数才能在defer中关闭变量的话，尽管放手干吧。
+最后，在某些情况下，如果您需要命名结果参数才能在defer中关闭变量的话，也是可以的。
 
-
-## Naked Returns
-
-见 [Named Result Parameters](#named-result-parameters).
 
 ## Package Comments
 
