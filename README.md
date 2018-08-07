@@ -10,7 +10,7 @@
 * [Contexts](#contexts)
 * [Goroutine 生命周期](#goroutine-生命周期)
 * [拷贝](#拷贝)
-* [使用crypto/rand生成随机值](#使用crypto/rand生成随机值)
+* [使用crypto/rand生成随机值](#使用crypto//rand生成随机值)
 * [空切片](#空切片)
 * [Panic](#panic)
 * [错误](#错误)
