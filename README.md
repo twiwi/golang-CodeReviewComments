@@ -3,6 +3,7 @@
 本文参考自
      [Effective Go](https://golang.org/doc/effective_go.html ).
      [Golang Code Review](https://github.com/golang/go/wiki/CodeReviewComments#initialisms)
+     
      侵删。
 
 * [Gofmt](#gofmt)
@@ -10,7 +11,7 @@
 * [Contexts](#contexts)
 * [Goroutine 生命周期](#goroutine-生命周期)
 * [拷贝](#拷贝)
-* [使用crypto/rand生成随机值](#使用crypto/rand生成随机值)
+* [使用crypto rand生成随机值](#使用crypto-rand生成随机值)
 * [空切片](#空切片)
 * [Panic](#panic)
 * [错误](#错误)
@@ -194,7 +195,7 @@ Goroutines可能会因阻塞channel的send或者receives而泄露,即使被阻�
 
 通常来说，如果一个类型 `T`其方法与指针结构相关，那么请不要拷贝 `T`的值。
 
-## 使用crypto/rand生成随机值
+## 使用crypto rand生成随机值
 
 请不要使用包 `math/rand` 来生成密钥，即使是一次性的。如果不提供种子，则密钥完全可以被预测到。就算用`time.Nanoseconds()`作为种子，也仅仅只有几个位上的差别。
 
