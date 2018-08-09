@@ -3,14 +3,14 @@
 本文参考自
      [Effective Go](https://golang.org/doc/effective_go.html ).
      [Golang Code Review](https://github.com/golang/go/wiki/CodeReviewComments#initialisms)
-     如有侵权，请联系我删除。
+     侵删。
 
 * [Gofmt](#gofmt)
 * [注释语句](#注释语句)
 * [Contexts](#contexts)
 * [Goroutine 生命周期](#goroutine-生命周期)
 * [拷贝](#拷贝)
-* [使用crypto/rand生成随机值](#使用crypto\/rand生成随机值)
+* [使用crypto/rand生成随机值](#使用crypto\rand生成随机值)
 * [空切片](#空切片)
 * [Panic](#panic)
 * [错误](#错误)
