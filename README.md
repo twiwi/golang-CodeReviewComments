@@ -546,8 +546,8 @@ func (f *Foo) Location() (lat, long float64, err error)
 * 请不要使用指针，如果满足receiver为map，func或者chan，或receiver为切片并且该方法不会重新分配切片
 * 请不要使用指针，如果receiver是较小数组或结构体，没有可变的字段和指针，或者是一个简单的基本类型，int或者string
 * 请使用指针，如果方法需要改变receiver
-* 请使用指针以避免被拷贝，如果receiver包含了sync.Mutex 或类似同步字段的结构
-* 请使用指针以提升效率，如果receiver是较大的数组或结构体
+* 请使用指针，以避免被拷贝，如果receiver包含了sync.Mutex 或类似同步字段的结构
+* 请使用指针，以提升效率，如果receiver是较大的数组或结构体
 * 请使用指针，如果需要在方法中改变receiver的值
 * 请使用指针，如果receiver是结构体，数组或切片这种成员是一个指向可变内容的指针
 * 请使用指针，如果不清楚该如何选择
